@@ -1,0 +1,35 @@
+#posisjonert_1 {
+  left: 140px;
+  top: 50px;
+}
+
+#posisjonert_2 {
+  left: 270px;
+  top: 50px;
+}
+
+#posisjonert_3 {
+  left: 400px;
+  top: 50px;
+}
+
+#posisjonert_4 {
+  left: 210px;
+  top: 170px;
+}
+
+#posisjonert_5 {
+  left: 340px;
+  top: 170px;
+}
+
+.ring {
+  width: 120px;
+  height: 120px;
+  padding: 10px;
+  position: absolute;
+  border-radius: 50%;
+  border-width: 20px;
+  border-style: solid;
+}
+

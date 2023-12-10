@@ -1,0 +1,30 @@
+body{
+    text-align: center;
+    background-color:azure
+}
+
+span{
+  background-color: yellow;  
+  color: black;
+}
+h1{
+color:rgb(0, 162, 255);
+font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, sans-serif;
+font-weight: normal;
+}
+
+h2{
+     font-style: italic;
+     font-size: small;
+     font-weight: bold;
+}
+
+
+#lenke{
+background-color: grey;
+text-decoration: none;
+font-size: 25px;
+color: black;
+font-weight:normal
+;
+}

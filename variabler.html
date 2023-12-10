@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+let password = "Nesbru";
+let userinput = prompt("Hva er passordet?");
+
+if (password === userinput) {
+    document.write("Riktig");
+}
+
+else if (userinput=="?lengde"){
+    document.write(password.length);
+}
+
+else if (userinput=="?1"){
+    document.write(password[0]);
+}
+
+else if( userinput=="?2"){
+    document.write(password[1]);
+}
+
+else if(userinput=="?siste"){
+    document.write(password[2]+password[5])
+}
+
+else if(userinput=="?store"){
+    document.write(password.toUpperCase())
+}
+
+else if(userinput=="?småe"){
+    document.write(password.toLowerCase())
+}
+
+else {
+document.write("feil")
+}
+
+
+
+
+
+
+
+
+</script>
+    
+</body>
+
+</html>

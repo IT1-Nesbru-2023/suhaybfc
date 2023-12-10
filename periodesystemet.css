@@ -1,0 +1,43 @@
+#hoved {
+    display: grid;
+    grid-template-columns: repeat(18, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 5px;
+    text-align: center;
+    margin: 20px;
+}
+
+#hoved div {
+    border: 1px solid black;
+    padding: 20px;
+    font-size: 16px;
+}
+
+#invisible {
+    visibility: hidden;
+}
+
+.ikke-metall {
+    background-color: #ffcccb; /* Light pink for non-metals */
+}
+
+.halv-metall {
+    background-color: #c0eec0; /* Light green for half-metals */
+}
+
+.metall {
+    background-color: #add8e6; /* Light blue for metals */
+}
+
+.gull {
+    color: gold;
+    font-weight: bold;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    #hoved {
+        grid-template-columns: repeat(10, 1fr);
+        grid-template-rows: repeat(18, 1fr);
+    }
+}

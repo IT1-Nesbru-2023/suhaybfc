@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .players-container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    table {
+      margin-top: 20px;
+      border-collapse: collapse;
+      width: 80%;
+      margin-left: 10%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    /* Dice styles */
+    .dice-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .die {
+      width: 50px;
+      height: 50px;
+      background-color: white;
+      border: 1px solid #ddd;
+      margin: 0 5px;
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .locked {
+      background-color: #ddd;
+    }
+  </style>
+  <title>Yatzy Spill</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Yatzy Spill</h1>
+    <button onclick="startGame()">Start Spill</button>
+    <div id="players" class="players-container"></div>
+    <p id="turn-info"></p>
+    <table id="score-table"></table>
+    <div class="dice-container" id="dice-container"></div>
+    <button onclick="rollDice()">Roll Dice</button>
+    <button onclick="nextTurn()">Neste Runde</button>
+  </div>
+
+  <script>
+    let players = [];
+    let dice = [];
+    let currentPlayerIndex = 0;
+    let rollsLeft = 3;
+
+    function startGame() {
+      const playerCount = prompt("Legg inn antall spillere:");
+
+      players = [];
+      for (let i = 0; i < playerCount; i++) {
+        const playerName = prompt(`Skriv inn navn for Spiller ${i + 1}:`);
+        players.push({ name: playerName, scores: Array(19).fill(0) });
+      }
+
+      createDiceContainer();
+      rollsLeft = 3;
+      document.getElementById("dice-container").classList.remove("disabled");
+      displayPlayers();
+    }
+
+    function displayPlayers() {
+      const table = document.getElementById("score-table");
+      table.innerHTML = `<tr>
+        <th>Spiller</th>
+        <th>Enere</th>
+        <th>Toere</th>
+        <th>Treere</th>
+        <th>Firere</th>
+        <th>Femmere</th>
+        <th>Seksere</th>
+        <th>Sum</th>
+        <th>Bonus</th>
+        <th>1 par</th>
+        <th>2 par</th>
+        <th>3 par</th>
+        <th>4 like</th>
+        <th>Liten stright</th>
+        <th>Stor stright</th>
+        <th>Hus</th>
+        <th>Sjanse</th>
+        <th>Yatzy</th>
+        <th>Totalt</th>
+      </tr>`;
+
+      players.forEach(player => {
+        const row = table.insertRow();
+        const playerCell = row.insertCell();
+        playerCell.textContent = player.name;
+
+        // Player scores cells
+        for (let i = 0; i < 19; i++) {
+          const cell = row.insertCell();
+          cell.textContent = player.scores[i];
+          cell.onclick = () => fillScore(players[currentPlayerIndex], i);
+        }
+      });
+
+      updateTurnInfo();
+    }
+
+    function createDiceContainer() {
+      const diceContainer = document.getElementById("dice-container");
+      diceContainer.innerHTML = "";
+
+      for (let i = 0; i < 6; i++) {
+        const die = document.createElement("div");
+        die.classList.add("die");
+        die.textContent = getRandomNumber();
+        die.onclick = () => toggleLock(die);
+        dice.push({ element: die, locked: false });
+        diceContainer.appendChild(die);
+      }
+    }
+
+    function getRandomNumber() {
+      return Math.floor(Math.random() * 6) + 1;
+    }
+
+    function toggleLock(die) {
+      const index = dice.findIndex(d => d.element === die);
+      dice[index].locked = !dice[index].locked;
+      die.classList.toggle("locked");
+    }
+
+    function rollDice() {
+      if (rollsLeft > 0) {
+        dice.forEach(die => {
+          if (!die.locked) {
+            die.element.textContent = getRandomNumber();
+          }
+        });
+        rollsLeft--;
+      }
+
+      if (rollsLeft === 0) {
+        document.getElementById("dice-container").classList.add("disabled");
+        updateScoreTable();
+
+        // Reset marked dice after each round
+        resetMarkedDice();
+
+        // Display turn info on the page
+        updateTurnInfo();
+
+        // Show an alert after a delay
+        setTimeout(() => {
+          alert(`Neste runde: ${players[currentPlayerIndex].name}`);
+        }, 500);
+      }
+    }
+
+    function resetMarkedDice() {
+      dice.forEach(die => {
+        die.locked = false;
+        die.classList.remove("locked");
+      });
+    }
+
+    function updateTurnInfo() {
+      const turnInfo = document.getElementById("turn-info");
+      turnInfo.textContent = `Neste runde: ${players[currentPlayerIndex].name}`;
+    }
+
+    function updateScoreTable() {
+      const table = document.getElementById("score-table");
+
+      players.forEach((player, playerIndex) => {
+        table.rows[playerIndex + 1].cells[1].textContent = player.scores[0];
+        table.rows[playerIndex + 1].cells[2].textContent = player.scores[1];
+        table.rows[playerIndex + 1].cells[3].textContent = player.scores[2];
+        table.rows[playerIndex + 1].cells[4].textContent = player.scores[3];
+        table.rows[playerIndex + 1].cells[5].textContent = player.scores[4];
+        table.rows[playerIndex + 1].cells[6].textContent = player.scores[5];
+        table.rows[playerIndex + 1].cells[7].textContent = player.scores[6];
+        table.rows[playerIndex + 1].cells[8].textContent = player.scores[7];
+        table.rows[playerIndex + 1].cells[9].textContent = player.scores[8];
+        table.rows[playerIndex + 1].cells[10].textContent = player.scores[9];
+        table.rows[playerIndex + 1].cells[11].textContent = player.scores[10];
+        table.rows[playerIndex + 1].cells[12].textContent = player.scores[11];
+        table.rows[playerIndex + 1].cells[13].textContent = player.scores[12];
+        table.rows[playerIndex + 1].cells[14].textContent = player.scores[13];
+        table.rows[playerIndex + 1].cells[15].textContent = player.scores[14];
+        table.rows[playerIndex + 1].cells[16].textContent = player.scores[15];
+        table.rows[playerIndex + 1].cells[17].textContent = player.scores[16];
+        table.rows[playerIndex + 1].cells[18].textContent = player.scores[17];
+      });
+    }
+
+    function fillScore(player, index) {
+      const sum = calculateLockedDiceSum();
+
+      // Add sum to the corresponding category
+      if (index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5) {
+        // Categories 1-6 (Enere toere, ..., Seksere)
+        player.scores[index] = parseInt(player.scores[index]) + sum || 0;
+        // Check for bonus
+        const overStrekenSum = player.scores.slice(0, 6).reduce((acc, val) => acc + val, 0);
+        player.scores[7] = overStrekenSum >= 63 ? 50 : 0;
+      } else {
+        // Other categories
+        const score = prompt(`Skriv inn poeng for ${player.name} i kategori ${index + 1}:`);
+        player.scores[index] = parseInt(score) || 0;
+      }
+
+      rollsLeft = 3;
+      document.getElementById("dice-container").classList.remove("disabled");
+
+      if (currentPlayerIndex < players.length - 1) {
+        currentPlayerIndex++;
+      } else {
+        currentPlayerIndex = 0;
+      }
+
+      displayPlayers();
+    }
+
+    function calculateLockedDiceSum() {
+      const sum = dice.reduce((acc, die) => {
+        if (die.locked) {
+          return acc + parseInt(die.element.textContent);
+        }
+        return acc;
+      }, 0);
+
+      return sum;
+    }
+
+    function nextTurn() {
+      rollsLeft = 3;
+      document.getElementById("dice-container").classList.remove("disabled");
+
+      if (currentPlayerIndex < players.length - 1) {
+        currentPlayerIndex++;
+      } else {
+        currentPlayerIndex = 0;
+      }
+
+      displayPlayers();
+    }
+  </script>
+</body>
+</html>

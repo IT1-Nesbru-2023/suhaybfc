@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sjekk om et år er et skuddår</title>
+</head>
+<body>
+    <script>
+        let input = prompt("Skriv inn et årstall:");
+        let year = parseInt(input);
+
+        if (!isNaN(year)) {
+            let skuddAar = false;
+
+            if (year % 4 === 0) {
+                if (year % 100 !== 0 || (year % 100 === 0 && year % 400 === 0)) {
+                    skuddAar = true;
+                }
+            }
+
+            if (skuddAar) {
+                alert(year + " er et skuddår.");
+            } else {
+                alert(year + " er ikke et skuddår.");
+            }
+        } else {
+            alert("Du skrev ikke inn et gyldig årstall.");
+        }
+    </script>
