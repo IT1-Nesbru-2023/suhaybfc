@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visittkort maskin</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Legg til ekstra stiler her */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #skjema {
+            flex-basis: 48%;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        #visittkort {
+            flex-basis: 48%;
+            background-color: #ffffff;
+            border: 1px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+            float: right; /* Plasserer visittkortet helt til høyre */
+        }
+
+        #resultat {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px; /* Legg til litt mellomrom mellom knappene */
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="skjema">
+            <label for="navn">Navn</label>
+            <input type="text" id="navn" placeholder="Skriv inn navnet ditt" required>
+ 
+            <label for="fødselsdag">Fødselsdag</label>
+            <input type="date" id="fødselsdag">
+ 
+            <label for="telefonnummer">Telefonnummer</label>
+            <input type="tel" id="telefonnummer" placeholder="Nummer">
+ 
+            <label for="stilling">Stilling</label>
+            <input type="text" id="stilling" placeholder="Din stilling">
+ 
+            <label for="Kjønn">Kjønn</label>
+            <select id="Kjønn">
+                <option value="Mann">Mann</option>
+                <option value="Kvinne">Kvinne</option>
+                <option value="Annet">Annet</option>
+            </select>
+ 
+            <label for="førerkort">Jeg har førerkort</label>
+            <input type="checkbox" id="førerkort" name="førerkort" value="bil">
+           
+            <label for="bilde">Bilde av deg</label>
+            <input type="file" id="bilde" name="bilde">
+ 
+            <label for="farge">Bakgrunnsfarge</label>
+            <input type="color" id="farge" name="farge">
+ 
+            <label for="ramme">Ramme for visittkort</label><br>
+            <input type="radio" id="ramme1" name="ramme" value="Ramme1">
+            <label for="ramme1">Ramme 1</label>
+            <input type="radio" id="ramme2" name="ramme" value="Ramme2">
+            <label for="ramme2">Ramme 2</label>
+ 
+            <button id="registrerBtn">Registrer</button>
+            <button id="restartBtn">Restart</button> <!-- Knapp for å restarte -->
+        </form>
+        <div id="visittkort"></div>
+    </div>
+ 
+    <p id="resultat"></p>
+ 
+    <script>
+        let navnInp = document.querySelector("#navn");
+        let fødselsdagInp = document.querySelector("#fødselsdag");
+        let registrerBtn = document.querySelector("#registrerBtn");
+        let restartBtn = document.querySelector("#restartBtn"); // Henter knappen for restart
+        let visittkort = document.querySelector("#visittkort");
+        let telefonnummerInp = document.querySelector("#telefonnummer");
+        let stillingInp = document.querySelector("#stilling")
+ 
+        // Sjekk om det er lagret data i local storage og vis det på visittkortet
+        if (localStorage.getItem("brukerdata")) {
+            visittkort.innerHTML = localStorage.getItem("brukerdata");
+        }
+ 
+        registrerBtn.addEventListener("click", function() {
+            let navn = navnInp.value;
+            let fødselsdag = fødselsdagInp.value;
+            let telefonnummer = telefonnummerInp.value
+            let stilling = stillingInp.value
+            let data = "<p>Navn: " + navn + "</p><p>Fødselsdag: " + fødselsdag + "</p><p> telefonnummer:" + telefonnummer + "</p><p> din stilling:" + stilling +"</p>" ;
+ 
+            // Legg til brukerens data på visittkortet
+            visittkort.innerHTML = data;
+ 
+            // Lagre brukerens data i local storage
+            localStorage.setItem("brukerdata", data);
+        });
+
+        restartBtn.addEventListener("click", function() {
+            visittkort.innerHTML = ""; // Tømmer visittkortet
+            localStorage.removeItem("brukerdata"); // Fjerner data fra localStorage
+        });
+    </script>
+</body>
+</html>
